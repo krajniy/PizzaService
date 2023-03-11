@@ -15,7 +15,7 @@ As an administrator, I want to **manage** the assortment of pizzas at a specific
 All actions should be performed via a **REST API**.
 
 ## Containers Diagram
-[Containers Diagram] (img/Containers Diagram.png)
+[Containers Diagram](img/Containers Diagram.png)
 ### Description
 The containers diagram shows the high-level components of the system and their interactions. 
 The system consists of two main containers:<br/>
@@ -26,7 +26,7 @@ It handles authentication, routing, business logic and interacts with the databa
 
 
 ## Components Diagram
-[Components Diagram] (img/Components Diagram.png)
+[Components Diagram](https://raw.githubusercontent.com/krajniy/PizzaService/master/img/Components%20Diagram.png)
 ### Description
 
 The components diagram shows the internal components of the Application API. 
