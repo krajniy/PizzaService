@@ -56,3 +56,19 @@ These components are organized such that the PizzaController and AnonymousContro
 and PizzeriaService components, which in turn depend on the PizzaRepository and PizzeriaRepository components. </br>
 This layered architecture allows for separation of concerns and easier maintenance and testing of the application.
 
+## Entity Relations Diagram
+![ER Diagram](https://github.com/krajniy/PizzaService/blob/master/img/ER%20Diagram.png)
+### Description
+The diagram shows three entities: Pizza, Pizzeria, and Pizzeria_Pizza. </br>
+The Pizza entity has attributes: id, name, description, price, and image_url. 
+The id attribute serves as the primary key of the entity.</br>
+The Pizzeria entity has attributes: id, name, and address. 
+The id attribute serves as the primary key of the entity.</br>
+The Pizzeria_Pizza entity has attributes: pizzeria_id and pizza_id, which serve as foreign keys 
+that establish a many-to-many relationship between Pizza and Pizzeria. 
+This entity is used as a junction table to connect the two entities, with pizzeria_id referencing 
+the Pizzeria entity and pizza_id referencing the Pizza entity.</br>
+
+The design appears to be in third normal form (3NF), as there are no repeating groups 
+or transitive dependencies in the entities. Each entity contains only atomic values, 
+and relationships between entities are based on their primary and foreign keys.
