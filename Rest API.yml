@@ -1,0 +1,234 @@
+openapi: 3.0.0
+info:
+  title: Pizza Restaurant API
+  version: 1.0.0
+  description: RESTful API for a pizza restaurant
+
+paths:
+  /admin/pizzas:
+    get:
+      summary: Get all pizzas
+      description: Returns a list of all pizzas in the menu
+      responses:
+        '200':
+          description: List of pizzas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pizza'
+    post:
+      summary: Create a new pizza
+      description: Creates a new pizza in the menu
+      requestBody:
+        description: Pizza object to be created
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pizza'
+      responses:
+        '201':
+          description: Created pizza
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pizza'
+    /{pizza_id}:
+      get:
+        summary: Get a pizza by ID
+        description: Returns a single pizza by ID
+        parameters:
+          - name: pizza_id
+            in: path
+            description: ID of the pizza to retrieve
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Pizza object
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Pizza'
+      put:
+        summary: Update a pizza by ID
+        description: Updates a pizza by ID
+        parameters:
+          - name: pizza_id
+            in: path
+            description: ID of the pizza to update
+            required: true
+            schema:
+              type: integer
+        requestBody:
+          description: Pizza object to be updated
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pizza'
+        responses:
+          '200':
+            description: Updated pizza
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Pizza'
+      delete:
+        summary: Delete a pizza by ID
+        description: Deletes a pizza by ID
+        parameters:
+          - name: pizza_id
+            in: path
+            description: ID of the pizza to delete
+            required: true
+            schema:
+              type: integer
+        responses:
+          '204':
+            description: No content
+
+  /admin/pizzerias:
+    get:
+      summary: Get all pizzerias
+      description: Returns a list of all pizzerias
+      responses:
+        '200':
+          description: List of pizzerias
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pizzeria'
+    post:
+      summary: Create a new pizzeria
+      description: Creates a new pizzeria
+      requestBody:
+        description: Pizzeria object to be created
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pizzeria'
+      responses:
+        '201':
+          description: Created pizzeria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pizzeria'
+    /{pizzeria_id}:
+      get:
+        summary: Get a pizzeria by ID
+        description: Returns a single pizzeria by ID
+        parameters:
+          - name: pizzer
+components:
+  schemas:
+    Pizza:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+          format: float
+        image_url:
+          type: string
+      required:
+        - name
+        - description
+        - price
+        - image_url
+
+    Pizzeria:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        address:
+          type: string
+      required:
+        - name
+        - address
+
+    PizzeriaPizza:
+      type: object
+      properties:
+        pizzeria_id:
+          type: integer
+          format: int64
+        pizza_id:
+          type: integer
+          format: int64
+      required:
+        - pizzeria_id
+        - pizza_id
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    pizzaId:
+      name: id
+      in: path
+      description: ID of the pizza
+      required: true
+      schema:
+        type: integer
+        format: int64
+
+    pizzeriaId:
+      name: id
+      in: path
+      description: ID of the pizzeria
+      required: true
+      schema:
+        type: integer
+        format: int64
+
+  responses:
+    NotFound:
+      description: Entity not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+
+    Unauthorized:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+
+    Forbidden:
+      description: Forbidden request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string

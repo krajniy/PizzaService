@@ -59,12 +59,12 @@ This layered architecture allows for separation of concerns and easier maintenan
 ## Entity Relations Diagram
 ![ER Diagram](https://github.com/krajniy/PizzaService/blob/master/img/ER%20Diagram.png)
 ### Description
-The diagram shows three entities: Pizza, Pizzeria, and Pizzeria_Pizza. </br>
-The Pizza entity has attributes: id, name, description, price, and image_url. 
+The diagram shows three entities: **Pizza**, **Pizzeria**, and **Pizzeria_Pizza**. </br>
+The **Pizza** entity has attributes: id, name, description, price, and image_url. 
 The id attribute serves as the primary key of the entity.</br>
-The Pizzeria entity has attributes: id, name, and address. 
+The **Pizzeria** entity has attributes: id, name, and address. 
 The id attribute serves as the primary key of the entity.</br>
-The Pizzeria_Pizza entity has attributes: pizzeria_id and pizza_id, which serve as foreign keys 
+The **Pizzeria_Pizza** entity has attributes: pizzeria_id and pizza_id, which serve as foreign keys 
 that establish a many-to-many relationship between Pizza and Pizzeria. 
 This entity is used as a junction table to connect the two entities, with pizzeria_id referencing 
 the Pizzeria entity and pizza_id referencing the Pizza entity.</br>
