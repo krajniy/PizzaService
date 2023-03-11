@@ -1,6 +1,9 @@
 # Pizza Menu Service
 ## Project Overview
-Our goal is to develop a RESTful service for online pizza ordering. Users can choose from various types of pizzas and toppings, place an order, and pay for it online. Administrators can add new pizzas and toppings, view and process orders.
+Our goal is to develop a RESTful service that allows users to browse a menu of pizzas, 
+view information about pizzerias in their area. The API will be accessible by both 
+anonymous users and administrators.
+
 ## Functional Requirements
 ### User Stories for Anonymous Users
 As an anonymous user, I want to **view** the menu (list of pizzas) with images and descriptions.<br/>
