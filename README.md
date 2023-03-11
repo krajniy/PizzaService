@@ -72,3 +72,7 @@ the Pizzeria entity and pizza_id referencing the Pizza entity.</br>
 The design appears to be in third normal form (3NF), as there are no repeating groups 
 or transitive dependencies in the entities. Each entity contains only atomic values, 
 and relationships between entities are based on their primary and foreign keys.
+
+## Rest API in OpenAPI 3
+[Open API 3 specification](https://github.com/krajniy/PizzaService/blob/master/Rest%20API.yml)
+
