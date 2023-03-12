@@ -7,6 +7,8 @@ info:
 paths:
   /admin/pizzas:
     get:
+      tags:
+        - admin
       summary: Get all pizzas
       description: Returns a list of all pizzas in the menu
       responses:
@@ -18,7 +20,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Pizza'
+      security:
+        - bearerAuth: []
     post:
+      tags:
+        - admin
       summary: Create a new pizza
       description: Creates a new pizza in the menu
       requestBody:
@@ -35,64 +41,80 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Pizza'
-    /{pizza_id}:
-      get:
-        summary: Get a pizza by ID
-        description: Returns a single pizza by ID
-        parameters:
-          - name: pizza_id
-            in: path
-            description: ID of the pizza to retrieve
-            required: true
-            schema:
-              type: integer
-        responses:
-          '200':
-            description: Pizza object
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Pizza'
-      put:
-        summary: Update a pizza by ID
-        description: Updates a pizza by ID
-        parameters:
-          - name: pizza_id
-            in: path
-            description: ID of the pizza to update
-            required: true
-            schema:
-              type: integer
-        requestBody:
-          description: Pizza object to be updated
+      security:
+        - bearerAuth: []
+  /admin/pizzas/{pizza_id}:
+    get:
+      tags:
+        - admin
+      summary: Get a pizza by ID
+      description: Returns a single pizza by ID
+      parameters:
+        - name: pizza_id
+          in: path
+          description: ID of the pizza to retrieve
           required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Pizza object
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Pizza'
-        responses:
-          '200':
-            description: Updated pizza
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Pizza'
-      delete:
-        summary: Delete a pizza by ID
-        description: Deletes a pizza by ID
-        parameters:
-          - name: pizza_id
-            in: path
-            description: ID of the pizza to delete
-            required: true
+      security:
+        - bearerAuth: []
+    put:
+      tags:
+        - admin
+      summary: Update a pizza by ID
+      description: Updates a pizza by ID
+      parameters:
+        - name: pizza_id
+          in: path
+          description: ID of the pizza to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Pizza object to be updated
+        required: true
+        content:
+          application/json:
             schema:
-              type: integer
-        responses:
-          '204':
-            description: No content
+              $ref: '#/components/schemas/Pizza'
+      responses:
+        '200':
+          description: Updated pizza
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pizza'
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+        - admin
+      summary: Delete a pizza by ID
+      description: Deletes a pizza by ID
+      parameters:
+        - name: pizza_id
+          in: path
+          description: ID of the pizza to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No content
+      security:
+        - bearerAuth: []
 
   /admin/pizzerias:
     get:
+      tags:
+        - admin
       summary: Get all pizzerias
       description: Returns a list of all pizzerias
       responses:
@@ -104,7 +126,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Pizzeria'
+      security:
+        - bearerAuth: []
     post:
+      tags:
+        - admin
       summary: Create a new pizzeria
       description: Creates a new pizzeria
       requestBody:
@@ -121,12 +147,125 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Pizzeria'
-    /{pizzeria_id}:
-      get:
-        summary: Get a pizzeria by ID
-        description: Returns a single pizzeria by ID
-        parameters:
-          - name: pizzer
+      security:
+        - bearerAuth: []
+
+  /admin/pizzerias/{pizzeria_id}:
+    get:
+      tags:
+        - admin
+      summary: Get a pizzeria by ID
+      description: Returns a single pizzeria by ID
+      parameters:
+        - name: pizzeria_id
+          in: path
+          description: ID of the pizzeria
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Pizzeria object
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Pizzeria'
+      security:
+        - bearerAuth: []
+  /guest/pizzas:
+    get:
+      tags:
+        - guest
+      summary: Get all pizzas for a guest
+      description: Returns a list of all pizzas in the menu
+      responses:
+        '200':
+          description: List of pizzas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pizza'
+  /guest/pizzas/{pizza_name}:
+    get:
+      tags:
+        - guest
+      summary: Get a pizza by name for a guest
+      description: Returns a single pizza by name
+      parameters:
+        - name: pizza_name
+          in: path
+          description: name of the pizza to retrieve
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Pizza object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pizza'
+  /guest/pizzerias:
+    get:
+      tags:
+        - guest
+      summary: Get all pizzerias for a guest
+      description: Returns a list of all pizzerias
+      responses:
+        '200':
+          description: List of pizzerias
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pizzeria'
+  /guest/pizzerias/{pizzeria_address}:
+    get:
+      tags:
+        - guest
+      summary: Get a pizzeria by address for a guest
+      description: Returns a single pizzeria by address
+      parameters:
+        - name: pizzeria_address
+          in: path
+          description: address of the pizzeria
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Pizzeria object
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Pizzeria'
+  /guest/pizzerias/{pizzeria_id}/pizzas/:
+    get:
+      tags:
+        - guest
+      summary: Get all pizzas for a guest in Pizzzeria by ID
+      description: Returns a list of all pizzas in the menu
+      parameters:
+        - name: pizzeria_id
+          in: path
+          description: ID of the pizzeria
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of pizzas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pizza'
 components:
   schemas:
     Pizza:
