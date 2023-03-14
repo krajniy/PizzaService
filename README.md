@@ -34,11 +34,10 @@ It handles authentication, routing, business logic and interacts with the databa
 
 The components diagram shows the internal components of the Application API. 
 Here, the External Browser component represents the REST API that receives and responds to requests. 
-This is the outside component. </br>
-**PizzaController**: A controller component responsible for handling HTTP requests related to pizzas, 
-such as getting the menu, searching for a pizza, and managing pizzas (CRUD operations) for the administrator.</br>
-**PizzeriaController**: A controller component responsible for handling HTTP requests related to pizzerias, 
-such as getting a list of pizzerias, searching for a pizzeria by address, and managing pizzerias (CRUD operations) for the administrator.</br>
+This is the outsource component. </br>
+**AdminController**: A controller component responsible for handling HTTP requests that requires
+authentication, such as getting the menu, searching for a pizza, and managing pizzas (CRUD operations), 
+getting a list of pizzerias, searching for a pizzeria by address, and managing pizzerias (CRUD operations).</br>
 **AnonymousController**: A controller component responsible for handling HTTP requests that do not require 
 authentication, such as getting the menu, searching for a pizza, getting a list of pizzerias, 
 searching for a pizzeria by address, and getting pizza assortment for a specific pizzeria.</br>
