@@ -1,7 +1,11 @@
 package com.telran.pizzaservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "pizza")
@@ -26,4 +30,12 @@ public class Pizza {
 
     @Column(name = "image_url")
     private String imgUrl;
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            }, mappedBy = "pizzas")
+    @JsonIgnore
+    private Set<Pizzeria> pizzerias = new HashSet<>();
 }

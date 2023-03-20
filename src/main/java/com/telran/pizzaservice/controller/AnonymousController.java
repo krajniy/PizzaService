@@ -4,7 +4,6 @@ import com.telran.pizzaservice.entity.Pizza;
 import com.telran.pizzaservice.entity.Pizzeria;
 import com.telran.pizzaservice.service.PizzaService;
 import com.telran.pizzaservice.service.PizzeriaService;
-import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/guest")
 
-public class AnonymousController implements CommonController {
+public class AnonymousController{
     @Autowired
     private PizzaService pizzaService;
 
