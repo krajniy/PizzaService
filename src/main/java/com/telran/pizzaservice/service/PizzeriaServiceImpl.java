@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -31,6 +32,7 @@ public class PizzeriaServiceImpl implements PizzeriaService{
     }
 
     @Override
+    @Transactional
     public Long create(Pizzeria pizzeria) {
         Set<Pizza> pizzas = pizzeria.getPizzas();
         Set<Pizza> savedPizzas = new HashSet<>();
@@ -46,5 +48,53 @@ public class PizzeriaServiceImpl implements PizzeriaService{
 
         return pizzeria.getId();
 
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Pizzeria getPizzeriaById(Long pizzeriaId) {
+        //TODO PizzeriaNotFoundException
+        return pizzeriaRepository.findById(pizzeriaId).orElseThrow(IllegalArgumentException::new);
+    }
+
+    @Override
+    @Transactional
+    public void addPizzas(Long pizzeriaId, Set<Pizza> pizzas) {
+        Optional<Pizzeria> pizzeriaOptional = pizzeriaRepository.findById(pizzeriaId);
+        if (pizzeriaOptional.isPresent()){
+            Pizzeria pizzeria = pizzeriaOptional.get();
+            Set<Pizza> existingPizzas = pizzeria.getPizzas();
+
+            pizzas.forEach(p -> {
+                Optional<Pizza> pizzaOptional = pizzaRepository.findById(pizzaService.createIfNotExists(p));
+                if (pizzaOptional.isPresent()){
+                    Pizza existingPizza = pizzaOptional.get();
+                    if (!existingPizzas.contains(existingPizza)) {
+                        existingPizzas.add(existingPizza);
+                    }
+                }
+            });
+            pizzeriaRepository.save(pizzeria);
+
+        } else {
+            throw new IllegalArgumentException("Pizzeria not found with id: " + pizzeriaId);
+        }
+
+
+    }
+
+    @Override
+    @Transactional
+    public void deletePizza(Long pizzeriaId, Long pizzaId) {
+        Pizzeria pizzeria = getPizzeriaById(pizzeriaId);
+        Set<Pizza> pizzas = pizzeria.getPizzas();
+        Optional<Pizza> pizzaToRemove = pizzas.stream().filter(pizza -> pizza.getId().equals(pizzaId)).findFirst();
+        if (pizzaToRemove.isPresent()) {
+            pizzas.remove(pizzaToRemove.get());
+            pizzeria.setPizzas(pizzas);
+            pizzeriaRepository.save(pizzeria);
+        } else {
+            throw new IllegalArgumentException("Pizza not found in pizzeria.");
+        }
     }
 }

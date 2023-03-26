@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -25,8 +24,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        //TODO проверить адрес стилей, откуда фреймы h2, расшарить доступ
 
-        http.csrf().disable()
+        http
+                .csrf().disable()
                 .cors().and()
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.POST, "/admin/**").hasRole("ADMIN")
@@ -36,8 +37,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN")
                         .requestMatchers("/guest/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().authenticated()
+                )
+
                 .httpBasic();
+        http.headers().frameOptions().disable();
 
         return http.build();
     }

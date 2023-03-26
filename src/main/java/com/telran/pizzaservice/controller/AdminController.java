@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/admin")
@@ -102,6 +103,56 @@ public class AdminController {
             System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping("/pizzerias/{pizzeria_id}")
+    public ResponseEntity<Pizzeria> getPizzeriaById(@PathVariable Long pizzeria_id){
+        try {
+            return new ResponseEntity<>(pizzeriaService.getPizzeriaById(pizzeria_id), HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/pizzerias/{pizzeria_id}/pizzas/")
+    public ResponseEntity<Set<Pizza>> getAllPizzasInPizzeria(@PathVariable Long pizzeria_id){
+        try {
+            return new ResponseEntity<>(
+                    pizzeriaService.getPizzeriaById(pizzeria_id).getPizzas(), HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/pizzerias/{pizzeria_id}/pizzas")
+    public ResponseEntity<Void> addPizzasToPizzeria(@PathVariable Long pizzeria_id, @RequestBody Set<Pizza> pizzas){
+        try {
+            pizzeriaService.addPizzas(pizzeria_id, pizzas);
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/pizzerias/{pizzeria_id}/pizzas/{pizza_id}")
+    public ResponseEntity<Void> deletePizzaFrommPizzeria(
+            @PathVariable Long pizza_id,
+            @PathVariable Long pizzeria_id){
+        try {
+            pizzeriaService.deletePizza(pizzeria_id, pizza_id);
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
 

@@ -15,4 +15,6 @@ public interface PizzaService {
     void delete(Long id);
 
     Long createIfNotExists(Pizza pizza);
+
+    Pizza findByName(String pizzaName);
 }

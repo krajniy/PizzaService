@@ -35,6 +35,12 @@ public class PizzaServiceImpl implements PizzaService{
 
     @Override
     @Transactional(readOnly = true)
+    public Pizza findByName(String pizzaName) {
+        return pizzaRepository.findByName(pizzaName).orElseThrow(IllegalArgumentException::new);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Pizza get(Long id) {
         return pizzaRepository.findById(id).orElseThrow(IllegalArgumentException::new);
     }
