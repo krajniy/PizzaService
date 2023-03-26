@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface PizzeriaService {
     List<Pizzeria> getAllPizzerias();
+
+    Long create(Pizzeria pizzeria);
 }

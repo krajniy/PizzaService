@@ -7,9 +7,8 @@ import com.telran.pizzaservice.service.PizzeriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class AnonymousController{
     private PizzeriaService pizzeriaService;
 
     @GetMapping("/pizzas")
-
+    @Transactional(readOnly = true)
     public ResponseEntity<List<Pizza>> getAllPizzas() {
         try {
             return new ResponseEntity<>(pizzaService.getAllPizzas(), HttpStatus.OK);
@@ -36,7 +35,7 @@ public class AnonymousController{
     }
 
     @GetMapping("/pizzerias")
-
+    @Transactional(readOnly = true)
     public ResponseEntity<List<Pizzeria>> getAllPizzerias() {
         try {
             return new ResponseEntity<>(pizzeriaService.getAllPizzerias(), HttpStatus.OK);
@@ -46,4 +45,5 @@ public class AnonymousController{
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }
