@@ -4,7 +4,10 @@ import com.telran.pizzaservice.entity.Pizza;
 import com.telran.pizzaservice.entity.Pizzeria;
 import com.telran.pizzaservice.service.PizzaService;
 import com.telran.pizzaservice.service.PizzeriaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +28,11 @@ public class AdminController {
 
 
     @GetMapping("/pizzas")
-    public ResponseEntity<List<Pizza>> getAllPizzas() {
+    public ResponseEntity<List<Pizza>> getAllPizzas(@RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "10") int size) {
         try {
-            return new ResponseEntity<>(pizzaService.getAllPizzas(), HttpStatus.OK);
+            Pageable pageable = PageRequest.of(page, size);
+            return new ResponseEntity<>(pizzaService.getAllPizzas(pageable), HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
@@ -36,9 +41,11 @@ public class AdminController {
     }
 
     @GetMapping("/pizzerias")
-    public ResponseEntity<List<Pizzeria>> getAllPizzerias() {
+    public ResponseEntity<List<Pizzeria>> getAllPizzerias(@RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "10") int size) {
         try {
-            return new ResponseEntity<>(pizzeriaService.getAllPizzerias(), HttpStatus.OK);
+            Pageable pageable = PageRequest.of(page, size);
+            return new ResponseEntity<>(pizzeriaService.getAllPizzerias(pageable), HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
@@ -47,7 +54,7 @@ public class AdminController {
     }
 
     @PostMapping("/pizzas")
-    public ResponseEntity<Long> createPizza(@RequestBody Pizza pizza){
+    public ResponseEntity<Long> createPizza(@Valid @RequestBody Pizza pizza){
         try {
             return new ResponseEntity<>(pizzaService.createIfNotExists(pizza), HttpStatus.CREATED);
         } catch (IllegalStateException e) {
@@ -70,7 +77,7 @@ public class AdminController {
     }
 
     @PutMapping("/pizzas/{id}")
-    public ResponseEntity<Void> updatePizza(@PathVariable Long id, @RequestBody Pizza newPizza){
+    public ResponseEntity<Void> updatePizza(@PathVariable Long id, @Valid @RequestBody Pizza newPizza){
         try {
             pizzaService.update(id, newPizza);
             return new ResponseEntity<>(null, HttpStatus.OK);
@@ -94,7 +101,7 @@ public class AdminController {
     }
 
     @PostMapping("/pizzerias")
-    public ResponseEntity<Long> createPizzeria(@RequestBody Pizzeria pizzeria){
+    public ResponseEntity<Long> createPizzeria(@Valid @RequestBody Pizzeria pizzeria){
         try {
             return new ResponseEntity<>(pizzeriaService.create(pizzeria), HttpStatus.CREATED);
         } catch (IllegalStateException e) {
@@ -116,6 +123,7 @@ public class AdminController {
         }
     }
 
+    //TODO paging?
     @GetMapping("/pizzerias/{pizzeria_id}/pizzas/")
     public ResponseEntity<Set<Pizza>> getAllPizzasInPizzeria(@PathVariable Long pizzeria_id){
         try {
@@ -129,7 +137,7 @@ public class AdminController {
     }
 
     @PostMapping("/pizzerias/{pizzeria_id}/pizzas")
-    public ResponseEntity<Void> addPizzasToPizzeria(@PathVariable Long pizzeria_id, @RequestBody Set<Pizza> pizzas){
+    public ResponseEntity<Void> addPizzasToPizzeria(@PathVariable Long pizzeria_id, @Valid @RequestBody Set<Pizza> pizzas){
         try {
             pizzeriaService.addPizzas(pizzeria_id, pizzas);
             return new ResponseEntity<>(null, HttpStatus.OK);

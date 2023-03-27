@@ -2,6 +2,9 @@ package com.telran.pizzaservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.HashSet;
@@ -20,12 +23,15 @@ public class Pizza {
     private Long id;
 
     @Column(name = "name", nullable = false)
+    @NotBlank(message = "Name is mandatory")
+    @Size(max = 50, message = "Name must be no more than 50 characters long")
     private String name;
 
     @Column(name = "description")
     private String description;
 
     @Column(name = "price", nullable = false)
+    @Min(value = 0, message = "Price must be greater than zero")
     private Double price;
 
     @Column(name = "image_url")

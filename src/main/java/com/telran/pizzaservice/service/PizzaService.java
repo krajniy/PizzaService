@@ -1,12 +1,13 @@
 package com.telran.pizzaservice.service;
 
 import com.telran.pizzaservice.entity.Pizza;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 
 public interface PizzaService {
-    List<Pizza> getAllPizzas();
+    List<Pizza> getAllPizzas(Pageable pageable);
 
     Pizza get(Long id);
 

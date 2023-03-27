@@ -5,6 +5,7 @@ import com.telran.pizzaservice.entity.Pizzeria;
 import com.telran.pizzaservice.repository.PizzaRepository;
 import com.telran.pizzaservice.repository.PizzeriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +28,9 @@ public class PizzeriaServiceImpl implements PizzeriaService{
 
     @Override
     @Transactional(readOnly = true)
-    public List<Pizzeria> getAllPizzerias() {
-        return pizzeriaRepository.findAll();
+    public List<Pizzeria> getAllPizzerias(Pageable pageable) {
+
+        return pizzeriaRepository.findAll(pageable).getContent();
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.telran.pizzaservice.entity.Pizza;
 import com.telran.pizzaservice.repository.PizzaRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,8 +19,8 @@ public class PizzaServiceImpl implements PizzaService{
 
 
     @Override
-    public List<Pizza> getAllPizzas() {
-        return pizzaRepository.findAll();
+    public List<Pizza> getAllPizzas(Pageable pageable) {
+        return pizzaRepository.findAll(pageable).getContent();
     }
 
     @Override

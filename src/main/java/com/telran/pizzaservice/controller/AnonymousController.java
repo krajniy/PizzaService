@@ -27,13 +27,15 @@ public class AnonymousController{
     AdminController adminController;
 
     @GetMapping("/pizzas")
-    public ResponseEntity<List<Pizza>> getAllPizzas() {
-        return adminController.getAllPizzas();
+    public ResponseEntity<List<Pizza>> getAllPizzas(@RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "10") int size) {
+        return adminController.getAllPizzas(page, size);
     }
 
     @GetMapping("/pizzerias")
-    public ResponseEntity<List<Pizzeria>> getAllPizzerias() {
-        return adminController.getAllPizzerias();
+    public ResponseEntity<List<Pizzeria>> getAllPizzerias(@RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "10") int size) {
+        return adminController.getAllPizzerias(page, size);
     }
 
 

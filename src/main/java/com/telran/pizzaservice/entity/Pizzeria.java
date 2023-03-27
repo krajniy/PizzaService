@@ -1,6 +1,8 @@
 package com.telran.pizzaservice.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.HashSet;
@@ -18,9 +20,14 @@ public class Pizzeria {
     @Column(name = "id")
     private Long id;
 
+
+    @NotBlank(message = "Name is mandatory")
+    @Size(min = 1, max = 100, message = "Name must be between 1 and 100 characters")
     @Column(name = "name", nullable = false)
     private String name;
 
+    @NotBlank(message = "Address is mandatory")
+    @Size(min = 1, max = 100, message = "Address must be between 1 and 100 characters")
     @Column(name = "address", nullable = false)
     private String address;
 
