@@ -4,15 +4,16 @@ import com.telran.pizzaservice.entity.Pizza;
 import com.telran.pizzaservice.entity.Pizzeria;
 import com.telran.pizzaservice.service.PizzaService;
 import com.telran.pizzaservice.service.PizzeriaService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @RestController
 @RequestMapping("/guest")
 
@@ -41,13 +42,9 @@ public class AnonymousController{
 
     @GetMapping("/pizzas/{pizza_name}")
     public ResponseEntity<Pizza> getPizzaByName(@PathVariable String pizza_name){
-        try {
+
             return new ResponseEntity<>(pizzaService.findByName(pizza_name), HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
     }
 
     @GetMapping("/pizzerias/{pizzeria_id}/pizzas/")

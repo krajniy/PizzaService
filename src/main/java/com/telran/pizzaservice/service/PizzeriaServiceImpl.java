@@ -2,9 +2,12 @@ package com.telran.pizzaservice.service;
 
 import com.telran.pizzaservice.entity.Pizza;
 import com.telran.pizzaservice.entity.Pizzeria;
+import com.telran.pizzaservice.exception.PizzaNotFoundException;
+import com.telran.pizzaservice.exception.PizzeriaNotFoundException;
 import com.telran.pizzaservice.repository.PizzaRepository;
 import com.telran.pizzaservice.repository.PizzeriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +33,13 @@ public class PizzeriaServiceImpl implements PizzeriaService{
     @Transactional(readOnly = true)
     public List<Pizzeria> getAllPizzerias(Pageable pageable) {
 
-        return pizzeriaRepository.findAll(pageable).getContent();
+        Page<Pizzeria> pizzerias = pizzeriaRepository.findAll(pageable);
+
+        if (pizzerias.isEmpty()){
+            throw new PizzeriaNotFoundException("No pizzerias on this page");
+        }
+
+        return pizzerias.getContent();
     }
 
     @Override
@@ -55,8 +64,8 @@ public class PizzeriaServiceImpl implements PizzeriaService{
     @Override
     @Transactional(readOnly = true)
     public Pizzeria getPizzeriaById(Long pizzeriaId) {
-        //TODO PizzeriaNotFoundException
-        return pizzeriaRepository.findById(pizzeriaId).orElseThrow(IllegalArgumentException::new);
+
+        return pizzeriaRepository.findById(pizzeriaId).orElseThrow(PizzeriaNotFoundException::new);
     }
 
     @Override
@@ -79,7 +88,7 @@ public class PizzeriaServiceImpl implements PizzeriaService{
             pizzeriaRepository.save(pizzeria);
 
         } else {
-            throw new IllegalArgumentException("Pizzeria not found with id: " + pizzeriaId);
+            throw new PizzeriaNotFoundException(pizzeriaId);
         }
 
 
@@ -96,7 +105,7 @@ public class PizzeriaServiceImpl implements PizzeriaService{
             pizzeria.setPizzas(pizzas);
             pizzeriaRepository.save(pizzeria);
         } else {
-            throw new IllegalArgumentException("Pizza not found in pizzeria.");
+            throw new PizzaNotFoundException("Pizza not found in pizzeria.");
         }
     }
 }

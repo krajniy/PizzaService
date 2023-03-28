@@ -24,7 +24,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        //TODO проверить адрес стилей, откуда фреймы h2, расшарить доступ
 
         http
                 .csrf().disable()

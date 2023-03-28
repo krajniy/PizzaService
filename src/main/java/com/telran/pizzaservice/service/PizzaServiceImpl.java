@@ -1,9 +1,11 @@
 package com.telran.pizzaservice.service;
 
 import com.telran.pizzaservice.entity.Pizza;
+import com.telran.pizzaservice.exception.PizzaNotFoundException;
 import com.telran.pizzaservice.repository.PizzaRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +22,11 @@ public class PizzaServiceImpl implements PizzaService{
 
     @Override
     public List<Pizza> getAllPizzas(Pageable pageable) {
-        return pizzaRepository.findAll(pageable).getContent();
+        Page<Pizza> pizzas = pizzaRepository.findAll(pageable);
+        if (pizzas.isEmpty()){
+            throw new PizzaNotFoundException("No pizzas found on this page");
+        }
+        return pizzas.getContent();
     }
 
     @Override
@@ -37,19 +43,20 @@ public class PizzaServiceImpl implements PizzaService{
     @Override
     @Transactional(readOnly = true)
     public Pizza findByName(String pizzaName) {
-        return pizzaRepository.findByName(pizzaName).orElseThrow(IllegalArgumentException::new);
+        return pizzaRepository.findByName(pizzaName).orElseThrow(PizzaNotFoundException::new);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Pizza get(Long id) {
-        return pizzaRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+
+        return pizzaRepository.findById(id).orElseThrow(PizzaNotFoundException::new);
     }
 
     @Override
     @Transactional()
     public void update(Long id, Pizza newPizza) {
-        Pizza pizza = pizzaRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Pizza pizza = pizzaRepository.findById(id).orElseThrow(PizzaNotFoundException::new);
         pizza.setName(newPizza.getName());
         pizza.setDescription(newPizza.getDescription());
         pizza.setPrice(newPizza.getPrice());
@@ -61,7 +68,7 @@ public class PizzaServiceImpl implements PizzaService{
     @Override
     @Transactional()
     public void delete(Long id) {
-        Pizza pizza = pizzaRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Pizza pizza = pizzaRepository.findById(id).orElseThrow(PizzaNotFoundException::new);
         pizzaRepository.delete(pizza);
     }
 }
