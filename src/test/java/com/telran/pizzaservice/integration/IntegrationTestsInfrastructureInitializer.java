@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @AutoConfigureMockMvc
 public abstract class IntegrationTestsInfrastructureInitializer {
 

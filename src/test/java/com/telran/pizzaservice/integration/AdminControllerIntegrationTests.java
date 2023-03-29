@@ -7,6 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.HashSet;
@@ -19,8 +21,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @SpringBootTest
 public class AdminControllerIntegrationTests extends IntegrationTestsInfrastructureInitializer {
+
     @Test
     @DisplayName("GET all pizzas")
+    @Transactional(readOnly = true)
     void testGetAllPizzas() throws Exception {
         mockMvc.perform(get("/admin/pizzas")
                         .with(httpBasic("user", "password"))
@@ -33,6 +37,7 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
 
     @Test
     @DisplayName("GET all pizzerias")
+    @Transactional(readOnly = true)
     void testGetAllPizzerias() throws Exception {
         mockMvc.perform(get("/admin/pizzerias")
                         .with(httpBasic("user", "password"))
@@ -45,6 +50,7 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
 
     @Test
     @DisplayName("GET all pizzas with pagination")
+    @Transactional(readOnly = true)
     void testGetAllPizzasWithPagination() throws Exception {
         mockMvc.perform(get("/admin/pizzas?page=0&size=2")
                         .with(httpBasic("user", "password"))
@@ -57,6 +63,7 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
 
     @Test
     @DisplayName("GET all pizzerias with pagination")
+    @Transactional(readOnly = true)
     void testGetAllPizzeriasWithPagination() throws Exception {
         mockMvc.perform(get("/admin/pizzerias?page=0&size=2")
                         .with(httpBasic("user", "password"))
@@ -69,6 +76,7 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
 
     @Test
     @DisplayName("GET without auth")
+    @Transactional(readOnly = true)
     void testGetWithoutAuth() throws Exception {
         mockMvc.perform(get("/admin/pizzas")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -77,21 +85,8 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
     }
 
     @Test
-    @DisplayName("CREATE new pizza")
-    void testCreatePizza() throws Exception {
-        String jsonRequest = "{\"name\": \"test\", \"description\": \"test\", \"price\": 14.99, \"imgUrl\": \"test\"}";
-        mockMvc.perform(post("/admin/pizzas")
-                        .with(httpBasic("user", "password"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonRequest))
-                .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$").isNumber())
-                .andExpect(jsonPath("$").value(4));
-    }
-
-    @Test
     @DisplayName("GET pizza by id")
+    @Transactional(readOnly = true)
     void testGetPizzaById() throws Exception {
         Pizza pizza = new Pizza();
         pizza.setName("Vegan");
@@ -113,71 +108,10 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
                 .andExpect(jsonPath("$.price").value(10.0));
     }
 
-    @Test
-    @DisplayName("UPDATE pizza by id")
-    void testUpdatePizzaWithValidData() throws Exception {
-        Pizza pizza = new Pizza();
-        pizza.setName("Vegan");
-        pizza.setPrice(10.0);
-        pizza.setImgUrl("url");
-        pizza.setDescription("This is test pizza");
-
-        Long pizzaId = pizzaService.createIfNotExists(pizza);
-
-        Pizza newPizza = new Pizza();
-        newPizza.setName("Veganisch");
-        newPizza.setPrice(10.0);
-        newPizza.setImgUrl("url");
-        newPizza.setDescription("This is test pizza");
-
-        mockMvc.perform(put("/admin/pizzas/{id}", pizzaId)
-                        .with(httpBasic("user", "password"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(newPizza)))
-                .andDo(print())
-                .andExpect(status().isOk());
-
-        Pizza updated = pizzaService.get(pizzaId);
-
-        Assertions.assertEquals("Veganisch", updated.getName());
-        Assertions.assertEquals("url", updated.getImgUrl());
-    }
-
-    @Test
-    @DisplayName("DELETE pizza by id")
-    void testDeletePizza() throws Exception {
-        Pizza pizza = new Pizza();
-        pizza.setName("Vegan");
-        pizza.setPrice(10.0);
-        pizza.setImgUrl("url");
-        pizza.setDescription("This is test pizza");
-
-        Long pizzaId = pizzaService.createIfNotExists(pizza);
-
-        mockMvc.perform(delete("/admin/pizzas/{id}", pizzaId)
-                        .with(httpBasic("user", "password"))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isNoContent());
-    }
-
-    @Test
-    @DisplayName("CREATE new pizzeria")
-    void testCreatePizzeria() throws Exception {
-        String jsonRequest = "{\"name\": \"testWithourPizzas\", \"address\": \"testWithourPizzas\"}";
-        mockMvc.perform(post("/admin/pizzerias")
-                        .with(httpBasic("user", "password"))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(jsonRequest))
-                .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$").isNumber())
-                .andExpect(jsonPath("$").value(4));
-    }
 
     @Test
     @DisplayName("GET Pizzeria by id")
+    @Transactional(readOnly = true)
     void testGetPizzeriaById() throws Exception {
         Pizzeria pizzeria = new Pizzeria();
         pizzeria.setName("TestPizzeria");
@@ -195,8 +129,10 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
                 .andExpect(jsonPath("$.address").value("TestPizzeriaAddress"));
     }
 
+
     @Test
     @DisplayName("GET all pizzas in pizzeria by pizzeria_id")
+    @Transactional(readOnly = true)
     void testGetAllPizzasInPizzeria() throws Exception {
 
         Pizzeria pizzeria = new Pizzeria();
@@ -232,7 +168,96 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
     }
 
     @Test
+    @DisplayName("CREATE new pizza")
+    @Transactional()
+    @Rollback(true)
+    void testCreatePizza() throws Exception {
+        String jsonRequest = "{\"name\": \"test\", \"description\": \"test\", \"price\": 14.99, \"imgUrl\": \"test\"}";
+        mockMvc.perform(post("/admin/pizzas")
+                        .with(httpBasic("user", "password"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$").isNumber());
+    }
+
+
+    @Test
+    @DisplayName("UPDATE pizza by id")
+    @Transactional()
+    @Rollback(true)
+    void testUpdatePizzaWithValidData() throws Exception {
+        Pizza pizza = new Pizza();
+        pizza.setName("Vegan");
+        pizza.setPrice(10.0);
+        pizza.setImgUrl("url");
+        pizza.setDescription("This is test pizza");
+
+        Long pizzaId = pizzaService.createIfNotExists(pizza);
+
+        Pizza newPizza = new Pizza();
+        newPizza.setName("Veganisch");
+        newPizza.setPrice(10.0);
+        newPizza.setImgUrl("url");
+        newPizza.setDescription("This is test pizza");
+
+        mockMvc.perform(put("/admin/pizzas/{id}", pizzaId)
+                        .with(httpBasic("user", "password"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(newPizza)))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        Pizza updated = pizzaService.get(pizzaId);
+
+        Assertions.assertEquals("Veganisch", updated.getName());
+        Assertions.assertEquals("url", updated.getImgUrl());
+    }
+
+    @Test
+    @DisplayName("DELETE pizza by id")
+    @Transactional()
+    @Rollback(true)
+    void testDeletePizza() throws Exception {
+        Pizza pizza = new Pizza();
+        pizza.setName("Vegan");
+        pizza.setPrice(10.0);
+        pizza.setImgUrl("url");
+        pizza.setDescription("This is test pizza");
+
+        Long pizzaId = pizzaService.createIfNotExists(pizza);
+
+        mockMvc.perform(delete("/admin/pizzas/{id}", pizzaId)
+                        .with(httpBasic("user", "password"))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("CREATE new pizzeria")
+    @Transactional()
+    @Rollback(true)
+    void testCreatePizzeria() throws Exception {
+
+        String jsonRequest = "{\"name\": \"TestPizzeriaWithoutPizzas\", \"address\": \"TestPizzeriaAddressWithoutPizzas\"}";
+
+        mockMvc.perform(post("/admin/pizzerias")
+                        .with(httpBasic("user", "password"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$").isNumber());
+    }
+
+
+    @Test
     @DisplayName("ADD pizzas to pizzeria")
+    @Transactional()
+    @Rollback(true)
     void testAddPizzasToPizzeria() throws Exception {
         Pizzeria pizzeria = new Pizzeria();
         pizzeria.setName("TestPizzeriaWithPizzas");
@@ -267,6 +292,8 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
 
     @Test
     @DisplayName("DELETE pizza from pizzeria")
+    @Transactional()
+    @Rollback(true)
     void deletePizzaFrommPizzeria() throws Exception {
         Pizzeria pizzeria = new Pizzeria();
         pizzeria.setName("TestPizzeriaWithPizzas");
