@@ -16,7 +16,7 @@ public class AnonymousControllerIntegrationTests extends IntegrationTestsInfrast
 
 
     @Test
-    @DisplayName("Получение списка всех пицц")
+    @DisplayName("GET all pizzas")
     void testGetAllPizzas() throws Exception {
         mockMvc.perform(get("/guest/pizzas")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -27,7 +27,7 @@ public class AnonymousControllerIntegrationTests extends IntegrationTestsInfrast
     }
 
     @Test
-    @DisplayName("Получение списка всех пиццерий")
+    @DisplayName("GET all pizzerias")
     void testGetAllPizzerias() throws Exception {
         mockMvc.perform(get("/guest/pizzerias")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -38,7 +38,7 @@ public class AnonymousControllerIntegrationTests extends IntegrationTestsInfrast
     }
 
     @Test
-    @DisplayName("Получение пиццы по имени")
+    @DisplayName("GET pizza by name")
     void testGetPizzaByName() throws Exception {
         mockMvc.perform(get("/guest/pizzas/{name}", "Margherita")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -49,7 +49,7 @@ public class AnonymousControllerIntegrationTests extends IntegrationTestsInfrast
     }
 
     @Test
-    @DisplayName("Получение списка пицц в пиццерии")
+    @DisplayName("GET set of pizzas in pizzeria")
     void testGetAllPizzasInPizzeria() throws Exception {
         mockMvc.perform(get("/guest/pizzerias/{id}/pizzas/", 1)
                         .contentType(MediaType.APPLICATION_JSON))

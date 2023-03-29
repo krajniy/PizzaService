@@ -34,7 +34,7 @@ public class AdminControllerTests {
     private AdminController adminController;
 
     @Test
-    public void testGetAllPizzas(){
+    public void testGetAllPizzas() {
         List<Pizza> pizzas = new ArrayList<>();
         pizzas.add(new Pizza());
         Mockito.when(pizzaService.getAllPizzas(PageRequest.of(0, 10))).thenReturn(pizzas);
@@ -44,17 +44,17 @@ public class AdminControllerTests {
     }
 
     @Test
-    public void testGetAllPizzerias(){
+    public void testGetAllPizzerias() {
         List<Pizzeria> pizzerias = new ArrayList<>();
         pizzerias.add(new Pizzeria());
-        Mockito.when(pizzeriaService.getAllPizzerias(PageRequest.of(0,10))).thenReturn(pizzerias);
+        Mockito.when(pizzeriaService.getAllPizzerias(PageRequest.of(0, 10))).thenReturn(pizzerias);
         ResponseEntity<List<Pizzeria>> responseEntity = adminController.getAllPizzerias(0, 10);
         Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         Assert.assertEquals(pizzerias, responseEntity.getBody());
     }
 
     @Test
-    public void testCreatePizza(){
+    public void testCreatePizza() {
         Pizza pizza = new Pizza(1L, "name", "description", 10.0, "url",
                 Set.of(new Pizzeria()));
         Mockito.when(pizzaService.createIfNotExists(pizza)).thenReturn(1L);
@@ -65,7 +65,7 @@ public class AdminControllerTests {
     }
 
     @Test
-    public void testGetPizza(){
+    public void testGetPizza() {
         Pizza pizza = new Pizza(1L, "name", "description", 10.0, "url",
                 Set.of(new Pizzeria()));
 
@@ -78,7 +78,7 @@ public class AdminControllerTests {
     }
 
     @Test
-    public void testUpdatePizza(){
+    public void testUpdatePizza() {
         Pizza pizza = new Pizza(1L, "name", "description", 10.0, "url",
                 Set.of(new Pizzeria()));
         Mockito.doNothing().when(pizzaService).update(1L, pizza);
@@ -109,7 +109,7 @@ public class AdminControllerTests {
     }
 
     @Test
-    public void testGetPizzeriaById(){
+    public void testGetPizzeriaById() {
         Pizzeria pizzeria = new Pizzeria(1L, "Pizzeria1", "Address1", Set.of());
         Mockito.when(pizzeriaService.getPizzeriaById(1L)).thenReturn(pizzeria);
 
@@ -120,7 +120,7 @@ public class AdminControllerTests {
     }
 
     @Test
-    public void testGetAllPizzasInPizzeria(){
+    public void testGetAllPizzasInPizzeria() {
         Set<Pizza> pizzas = Set.of(
                 new Pizza(1L, "name", "description", 10.0, "url",
                         Set.of(new Pizzeria())),
@@ -136,7 +136,7 @@ public class AdminControllerTests {
     }
 
     @Test
-    public void testAddPizzasToPizzeria(){
+    public void testAddPizzasToPizzeria() {
         Set<Pizza> pizzas = Set.of(
                 new Pizza(1L, "name", "description", 10.0, "url",
                         Set.of(new Pizzeria())),

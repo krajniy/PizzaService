@@ -95,7 +95,6 @@ public class AdminController {
 
     }
 
-    //TODO paging?
     @GetMapping("/pizzerias/{pizzeria_id}/pizzas/")
     public ResponseEntity<Set<Pizza>> getAllPizzasInPizzeria(@PathVariable Long pizzeria_id) {
 

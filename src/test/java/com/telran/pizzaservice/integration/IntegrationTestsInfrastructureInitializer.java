@@ -2,6 +2,8 @@ package com.telran.pizzaservice.integration;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.telran.pizzaservice.service.PizzaService;
+import com.telran.pizzaservice.service.PizzeriaService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,5 +23,11 @@ public abstract class IntegrationTestsInfrastructureInitializer {
 
     @Autowired
     protected ObjectMapper objectMapper;
+
+    @Autowired
+    protected PizzaService pizzaService;
+
+    @Autowired
+    protected PizzeriaService pizzeriaService;
 
 }
