@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PizzaServiceImpl implements PizzaService{
+public class PizzaServiceImpl implements PizzaService {
 
     @Autowired
     PizzaRepository pizzaRepository;
@@ -23,7 +23,7 @@ public class PizzaServiceImpl implements PizzaService{
     @Override
     public List<Pizza> getAllPizzas(Pageable pageable) {
         Page<Pizza> pizzas = pizzaRepository.findAll(pageable);
-        if (pizzas.isEmpty()){
+        if (pizzas.isEmpty()) {
             throw new PizzaNotFoundException("No pizzas found on this page");
         }
         return pizzas.getContent();
@@ -36,6 +36,9 @@ public class PizzaServiceImpl implements PizzaService{
         if (existingPizza.isPresent()) {
             return existingPizza.get().getId();
         } else {
+            if (pizza.getBasePrice() == null) {
+                pizza.setBasePrice(pizza.getPrice());
+            }
             return pizzaRepository.save(pizza).getId();
         }
     }
@@ -62,6 +65,11 @@ public class PizzaServiceImpl implements PizzaService{
         pizza.setPrice(newPizza.getPrice());
         pizza.setPizzerias(newPizza.getPizzerias());
         pizza.setImgUrl(newPizza.getImgUrl());
+        if (newPizza.getBasePrice() != null) {
+            pizza.setBasePrice(newPizza.getBasePrice());
+        } else {
+            pizza.setBasePrice(newPizza.getPrice());
+        }
 
     }
 

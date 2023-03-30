@@ -172,7 +172,7 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
     @Transactional()
     @Rollback(true)
     void testCreatePizza() throws Exception {
-        String jsonRequest = "{\"name\": \"test\", \"description\": \"test\", \"price\": 14.99, \"imgUrl\": \"test\"}";
+        String jsonRequest = "{\"name\": \"test\", \"description\": \"test\", \"price\": 14.99, \"basePrice\": 14.99, \"imgUrl\": \"test\"}";
         mockMvc.perform(post("/admin/pizzas")
                         .with(httpBasic("user", "password"))
                         .contentType(MediaType.APPLICATION_JSON)

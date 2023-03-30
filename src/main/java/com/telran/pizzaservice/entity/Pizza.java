@@ -1,10 +1,10 @@
 package com.telran.pizzaservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -35,6 +35,10 @@ public class Pizza {
     @Min(value = 0, message = "Price must be greater than zero")
     private Double price;
 
+    @Column(name = "base_price")
+    @Min(value = 0, message = "Base price must be greater than zero")
+    private Double basePrice;
+
     @Column(name = "image_url")
     private String imgUrl;
 
@@ -45,4 +49,21 @@ public class Pizza {
             }, mappedBy = "pizzas")
     @JsonIgnore
     private Set<Pizzeria> pizzerias = new HashSet<>();
+
+    @PostConstruct
+    public void init() {
+        if (basePrice == null) {
+            this.basePrice = this.price;
+        }
+    }
+
+    public Pizza(Long id, String name, String description, Double price, String imgUrl, Set<Pizzeria> pizzerias) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.basePrice = price;
+        this.imgUrl = imgUrl;
+        this.pizzerias = pizzerias;
+    }
 }
