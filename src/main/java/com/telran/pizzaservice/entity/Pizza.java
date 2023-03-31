@@ -11,6 +11,11 @@ import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Pizza Entity
+ *
+ * @author Elena Ivanishcheva
+ */
 @Entity
 @Table(name = "pizza")
 @AllArgsConstructor

@@ -7,7 +7,11 @@ import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
-
+/**
+ * Pizzeria Entity
+ *
+ * @author Elena Ivanishcheva
+ */
 @Entity
 @Table(name = "pizzeria")
 @AllArgsConstructor

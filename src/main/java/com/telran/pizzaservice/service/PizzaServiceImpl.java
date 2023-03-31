@@ -13,13 +13,26 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementation of the {@link PizzaService} interface that uses the {@link PizzaRepository} to
+ * <p>
+ * perform CRUD operations on {@link Pizza} entities.
+ *
+ * @author Elena Ivanishcheva
+ */
 @Service
 public class PizzaServiceImpl implements PizzaService {
 
     @Autowired
     PizzaRepository pizzaRepository;
 
-
+    /**
+     * Retrieves all pizzas with paging from the database.
+     *
+     * @param pageable the paging information
+     * @return a list of pizzas on the requested page
+     * @throws PizzaNotFoundException if there are no pizzas on the requested page
+     */
     @Override
     public List<Pizza> getAllPizzas(Pageable pageable) {
         Page<Pizza> pizzas = pizzaRepository.findAll(pageable);
@@ -29,6 +42,12 @@ public class PizzaServiceImpl implements PizzaService {
         return pizzas.getContent();
     }
 
+    /**
+     * Creates a new pizza if it does not already exist in the database.
+     *
+     * @param pizza the pizza to create
+     * @return the id of the existing or newly created pizza
+     */
     @Override
     @Transactional()
     public Long createIfNotExists(@Valid Pizza pizza) {
@@ -43,12 +62,26 @@ public class PizzaServiceImpl implements PizzaService {
         }
     }
 
+    /**
+     * Finds a pizza by its name.
+     *
+     * @param pizzaName the name of the pizza to find
+     * @return the pizza with the given name
+     * @throws PizzaNotFoundException if the pizza is not found
+     */
     @Override
     @Transactional(readOnly = true)
     public Pizza findByName(String pizzaName) {
         return pizzaRepository.findByName(pizzaName).orElseThrow(PizzaNotFoundException::new);
     }
 
+    /**
+     * Retrieves a pizza by its id.
+     *
+     * @param id the id of the pizza to retrieve
+     * @return the pizza with the given id
+     * @throws PizzaNotFoundException if the pizza is not found
+     */
     @Override
     @Transactional(readOnly = true)
     public Pizza get(Long id) {
@@ -56,6 +89,13 @@ public class PizzaServiceImpl implements PizzaService {
         return pizzaRepository.findById(id).orElseThrow(PizzaNotFoundException::new);
     }
 
+    /**
+     * Updates an existing pizza in the database.
+     *
+     * @param id       the id of the pizza to update
+     * @param newPizza the updated pizza object
+     * @throws PizzaNotFoundException if the pizza is not found
+     */
     @Override
     @Transactional()
     public void update(Long id, Pizza newPizza) {
@@ -73,6 +113,12 @@ public class PizzaServiceImpl implements PizzaService {
 
     }
 
+    /**
+     * Deletes a pizza from the database.
+     *
+     * @param id the id of the pizza to delete
+     * @throws PizzaNotFoundException if the pizza is not found
+     */
     @Override
     @Transactional()
     public void delete(Long id) {
