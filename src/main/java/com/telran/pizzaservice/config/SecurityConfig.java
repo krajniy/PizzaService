@@ -10,18 +10,34 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
-
+/**
+ * Configuration class for Spring Security.
+ *
+ * @author Elena Ivanishcheva
+ */
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
+    /**
+     * Configures authentication manager to use in-memory authentication.
+     *
+     * @param auth the AuthenticationManagerBuilder instance to configure
+     * @throws Exception if an error occurs while configuring the authentication manager
+     */
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
                 .withUser("user").password("{noop}password").roles("ADMIN");
     }
 
+    /**
+     * Configures the security filter chain with authorization rules for different endpoints.
+     *
+     * @param http the HttpSecurity instance to configure
+     * @return the SecurityFilterChain instance created by this method
+     * @throws Exception if an error occurs while configuring the security filter chain
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 

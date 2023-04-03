@@ -2,8 +2,9 @@ package com.telran.pizzaservice.controller;
 
 import com.telran.pizzaservice.entity.Pizza;
 import com.telran.pizzaservice.entity.Pizzeria;
+import com.telran.pizzaservice.exception.PizzaNotFoundException;
+import com.telran.pizzaservice.exception.PizzeriaNotFoundException;
 import com.telran.pizzaservice.service.PizzaService;
-import com.telran.pizzaservice.service.PizzeriaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -29,9 +30,6 @@ import java.util.Set;
 public class AnonymousController {
     @Autowired
     private PizzaService pizzaService;
-
-    @Autowired
-    private PizzeriaService pizzeriaService;
 
     @Autowired
     AdminController adminController;
@@ -60,6 +58,7 @@ public class AnonymousController {
 
     /**
      * Get all pizzerias
+     *
      * @param page Page number
      * @param size Page size
      * @return ResponseEntity with a list of pizzerias and HTTP status code
@@ -81,8 +80,10 @@ public class AnonymousController {
 
     /**
      * Get a pizza by name
+     *
      * @param pizza_name Name of the pizza
      * @return ResponseEntity with the pizza and HTTP status code
+     * @throws PizzaNotFoundException if the pizza with the given name does not exist
      */
     @Operation(summary = "Get a pizza by name")
     @ApiResponses(value = {
@@ -100,8 +101,10 @@ public class AnonymousController {
 
     /**
      * Get all pizzas in a pizzeria
+     *
      * @param pizzeria_id ID of the pizzeria
      * @return ResponseEntity with a set of pizzas and HTTP status code
+     * @throws PizzeriaNotFoundException if the specified pizzeria does not exist
      */
     @Operation(summary = "Get all pizzas in a pizzeria")
     @ApiResponses(value = {

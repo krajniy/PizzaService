@@ -95,14 +95,12 @@ public class AdminController {
      *
      * @param pizza the pizza to be created
      * @return a ResponseEntity containing the ID of the newly created pizza and an HTTP status code of 201 (Created)
-     * @throws ConstraintViolationException    if the input Pizza resource violates a constraint
      * @throws MethodArgumentNotValidException if the input Pizza resource is not valid
      */
     @Operation(summary = "Create a new pizza", description = "Creates a new pizza")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "The pizza was created successfully"),
-            @ApiResponse(responseCode = "422", description = "The request body was invalid"),
-            @ApiResponse(responseCode = "500", description = "An error occurred while creating the pizza")
+            @ApiResponse(responseCode = "422", description = "The request body was invalid")
     })
     @PostMapping("/pizzas")
     public ResponseEntity<Long> createPizza(@Valid @RequestBody Pizza pizza) {
@@ -138,6 +136,8 @@ public class AdminController {
      * @param id       the id of the pizza to update
      * @param newPizza the updated pizza object
      * @return ResponseEntity with HTTP status code and response body
+     * @throws PizzaNotFoundException          if the pizza with the given ID does not exist
+     * @throws MethodArgumentNotValidException if the input Pizza resource is not valid
      */
     @Operation(summary = "Update a pizza by ID", description = "Update an existing pizza by its ID.")
     @ApiResponses(value = {
@@ -178,12 +178,12 @@ public class AdminController {
      *
      * @param pizzeria The {@link Pizzeria} object representing the new pizzeria to be created.
      * @return A {@link ResponseEntity} containing the ID of the new pizzeria and a status code of 201 Created.
+     * @throws MethodArgumentNotValidException if the input Pizzeria is not valid
      */
     @Operation(summary = "Create a new pizzeria")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Pizzeria created"),
-            @ApiResponse(responseCode = "422", description = "Invalid input"),
-            @ApiResponse(responseCode = "500", description = "Server error")
+            @ApiResponse(responseCode = "422", description = "Invalid input")
     })
     @PostMapping("/pizzerias")
     public ResponseEntity<Long> createPizzeria(@Valid @RequestBody Pizzeria pizzeria) {
@@ -197,6 +197,7 @@ public class AdminController {
      *
      * @param pizzeria_id the ID of the pizzeria to retrieve
      * @return a ResponseEntity containing the retrieved pizzeria and an HTTP status code
+     * @throws PizzeriaNotFoundException if the specified pizzeria does not exist
      */
     @Operation(summary = "Retrieve a specific pizzeria by ID")
     @ApiResponses(value = {
@@ -220,7 +221,7 @@ public class AdminController {
      */
     @Operation(summary = "Retrieve all pizzas available in the given pizzeria.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Retrieved pizzas from pizzeria" ),
+            @ApiResponse(responseCode = "200", description = "Retrieved pizzas from pizzeria"),
             @ApiResponse(responseCode = "404", description = "Pizzeria not found")})
     @GetMapping("/pizzerias/{pizzeria_id}/pizzas/")
     public ResponseEntity<Set<Pizza>> getAllPizzasInPizzeria(@PathVariable Long pizzeria_id) {
@@ -232,13 +233,14 @@ public class AdminController {
      * Adds the provided set of pizzas to the existing set of pizzas in the specified pizzeria.
      *
      * @param pizzeria_id the ID of the pizzeria
-     * @param pizzas the set of pizzas to add
+     * @param pizzas      the set of pizzas to add
      * @return a ResponseEntity with no content and a status of OK if the operation was successful
-     * @throws PizzeriaNotFoundException if the specified pizzeria does not exist
+     * @throws PizzeriaNotFoundException    if the specified pizzeria does not exist
+     * @throws ConstraintViolationException if set of pizza is unprocessable
      */
     @Operation(summary = "Adds the provided set of pizzas to the existing set of pizzas in the specified pizzeria.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Pizzas added to pizzeria" ),
+            @ApiResponse(responseCode = "200", description = "Pizzas added to pizzeria"),
             @ApiResponse(responseCode = "400", description = "Set of pizzas is unprocessable"),
             @ApiResponse(responseCode = "404", description = "Pizzeria not found")
     })
@@ -257,7 +259,7 @@ public class AdminController {
      * @param pizzeria_id the ID of the pizzeria from which to remove the pizza
      * @param pizza_id    the ID of the pizza to remove
      * @return a ResponseEntity with a null body and a status of NO_CONTENT if the pizza was successfully removed,
-     *         or a status of NOT_FOUND if the pizzeria or pizza was not found
+     * or a status of NOT_FOUND if the pizzeria or pizza was not found
      */
     @Operation(summary = "Removes the specified pizza from the specified pizzeria")
     @ApiResponses(value = {

@@ -170,7 +170,7 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
     @Test
     @DisplayName("CREATE new pizza")
     @Transactional()
-    @Rollback(true)
+    @Rollback()
     void testCreatePizza() throws Exception {
         String jsonRequest = "{\"name\": \"test\", \"description\": \"test\", \"price\": 14.99, \"basePrice\": 14.99, \"imgUrl\": \"test\"}";
         mockMvc.perform(post("/admin/pizzas")
@@ -186,7 +186,7 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
     @Test
     @DisplayName("UPDATE pizza by id")
     @Transactional()
-    @Rollback(true)
+    @Rollback()
     void testUpdatePizzaWithValidData() throws Exception {
         Pizza pizza = new Pizza();
         pizza.setName("Vegan");
@@ -219,7 +219,7 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
     @Test
     @DisplayName("DELETE pizza by id")
     @Transactional()
-    @Rollback(true)
+    @Rollback()
     void testDeletePizza() throws Exception {
         Pizza pizza = new Pizza();
         pizza.setName("Vegan");
@@ -239,7 +239,7 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
     @Test
     @DisplayName("CREATE new pizzeria")
     @Transactional()
-    @Rollback(true)
+    @Rollback()
     void testCreatePizzeria() throws Exception {
 
         String jsonRequest = "{\"name\": \"TestPizzeriaWithoutPizzas\", \"address\": \"TestPizzeriaAddressWithoutPizzas\"}";
@@ -257,7 +257,7 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
     @Test
     @DisplayName("ADD pizzas to pizzeria")
     @Transactional()
-    @Rollback(true)
+    @Rollback()
     void testAddPizzasToPizzeria() throws Exception {
         Pizzeria pizzeria = new Pizzeria();
         pizzeria.setName("TestPizzeriaWithPizzas");
@@ -293,7 +293,7 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
     @Test
     @DisplayName("DELETE pizza from pizzeria")
     @Transactional()
-    @Rollback(true)
+    @Rollback()
     void deletePizzaFrommPizzeria() throws Exception {
         Pizzeria pizzeria = new Pizzeria();
         pizzeria.setName("TestPizzeriaWithPizzas");

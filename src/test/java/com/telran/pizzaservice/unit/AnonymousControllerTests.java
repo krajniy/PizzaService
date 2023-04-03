@@ -25,8 +25,6 @@ public class AnonymousControllerTests {
     @Mock
     private PizzaService pizzaService;
 
-    @Mock
-    private PizzeriaService pizzeriaService;
 
     @Mock
     private AdminController adminController;

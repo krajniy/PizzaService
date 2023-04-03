@@ -81,6 +81,7 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(problemDetail, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+
     /**
      * Handles ConstraintViolationException and returns a ResponseEntity with a ProblemDetail object.
      *
@@ -101,6 +102,23 @@ public class RestExceptionHandler {
         problemDetail.setProperty("timestamp", Instant.now());
         problemDetail.setProperty("traceId", MDC.get("traceId"));
         return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Handles Exception and returns a ResponseEntity with a ProblemDetail object.
+     *
+     * @param e the MethodArgumentNotValidException to handle
+     * @return a ResponseEntity with a ProblemDetail object
+     */
+
+    @ExceptionHandler(Exception.class)
+    ResponseEntity<ProblemDetail> handleException(Exception e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        problemDetail.setTitle("Server error");
+        problemDetail.setType(URI.create("https://api.documents.com/errors/internal_server_error"));
+        problemDetail.setProperty("timestamp", Instant.now());
+        problemDetail.setProperty("traceId", org.slf4j.MDC.get("traceId"));
+        return new ResponseEntity<>(problemDetail, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
