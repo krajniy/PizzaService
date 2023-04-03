@@ -1,0 +1,9 @@
+com.telran.pizzaservice
+com.telran.pizzaservice.config
+com.telran.pizzaservice.controller
+com.telran.pizzaservice.entity
+com.telran.pizzaservice.exception
+com.telran.pizzaservice.integration
+com.telran.pizzaservice.repository
+com.telran.pizzaservice.service
+com.telran.pizzaservice.unit
