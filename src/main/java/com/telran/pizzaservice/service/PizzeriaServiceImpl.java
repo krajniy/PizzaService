@@ -2,8 +2,8 @@ package com.telran.pizzaservice.service;
 
 import com.telran.pizzaservice.entity.Pizza;
 import com.telran.pizzaservice.entity.Pizzeria;
-import com.telran.pizzaservice.exception.PizzaNotFoundException;
-import com.telran.pizzaservice.exception.PizzeriaNotFoundException;
+import com.telran.pizzaservice.service.exception.PizzaNotFoundException;
+import com.telran.pizzaservice.service.exception.PizzeriaNotFoundException;
 import com.telran.pizzaservice.repository.PizzaRepository;
 import com.telran.pizzaservice.repository.PizzeriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;

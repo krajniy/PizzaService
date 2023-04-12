@@ -1,8 +1,9 @@
 package com.telran.pizzaservice.service;
 
 import com.telran.pizzaservice.entity.Pizza;
-import com.telran.pizzaservice.exception.PizzaNotFoundException;
+import com.telran.pizzaservice.service.exception.PizzaNotFoundException;
 import com.telran.pizzaservice.repository.PizzaRepository;
+import com.telran.pizzaservice.service.exception.UnprocessableEntityException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,16 +31,17 @@ public class PizzaServiceImpl implements PizzaService {
      * Retrieves all pizzas with paging from the database.
      *
      * @param pageable the paging information
-     * @return a list of pizzas on the requested page
-     * @throws PizzaNotFoundException if there are no pizzas on the requested page
+     * @return a list of pizzas on the requested page or an empty list
      */
     @Override
+    @Transactional(readOnly = true)
     public List<Pizza> getAllPizzas(Pageable pageable) {
-        Page<Pizza> pizzas = pizzaRepository.findAll(pageable);
-        if (pizzas.isEmpty()) {
-            throw new PizzaNotFoundException("No pizzas found on this page");
-        }
-        return pizzas.getContent();
+//        Page<Pizza> pizzas = pizzaRepository.findAll(pageable);
+//        if (pizzas.isEmpty()) {
+//            throw new PizzaNotFoundException("No pizzas found on this page");
+//        }
+//        return pizzas.getContent();
+        return pizzaRepository.findAll(pageable).getContent();
     }
 
     /**
@@ -47,10 +49,14 @@ public class PizzaServiceImpl implements PizzaService {
      *
      * @param pizza the pizza to create
      * @return the id of the existing or newly created pizza
+     * @throws UnprocessableEntityException if the pizza entity contains an id
      */
     @Override
     @Transactional()
     public Long createIfNotExists(@Valid Pizza pizza) {
+        if (pizza.getId() != null) {
+            throw new UnprocessableEntityException("Pizza id must not be specified for creation");
+        }
         Optional<Pizza> existingPizza = pizzaRepository.findByName(pizza.getName());
         if (existingPizza.isPresent()) {
             return existingPizza.get().getId();
@@ -100,15 +106,26 @@ public class PizzaServiceImpl implements PizzaService {
     @Transactional()
     public void update(Long id, Pizza newPizza) {
         Pizza pizza = pizzaRepository.findById(id).orElseThrow(PizzaNotFoundException::new);
-        pizza.setName(newPizza.getName());
-        pizza.setDescription(newPizza.getDescription());
-        pizza.setPrice(newPizza.getPrice());
-        pizza.setPizzerias(newPizza.getPizzerias());
-        pizza.setImgUrl(newPizza.getImgUrl());
-        if (newPizza.getBasePrice() != null) {
-            pizza.setBasePrice(newPizza.getBasePrice());
+        if (newPizza.getId() == null) {
+
+            pizza.setName(newPizza.getName());
+            pizza.setDescription(newPizza.getDescription());
+            pizza.setPrice(newPizza.getPrice());
+//        pizza.setPizzerias(newPizza.getPizzerias());
+            pizza.setImgUrl(newPizza.getImgUrl());
+            if (newPizza.getBasePrice() != null) {
+                pizza.setBasePrice(newPizza.getBasePrice());
+            } else {
+                pizza.setBasePrice(newPizza.getPrice());
+            }
         } else {
-            pizza.setBasePrice(newPizza.getPrice());
+
+
+            if (!id.equals(newPizza.getId())) {
+                throw new IllegalArgumentException("Cannot update pizza with different id");
+            }
+
+            pizzaRepository.save(newPizza);
         }
 
     }

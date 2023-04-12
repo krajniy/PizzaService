@@ -2,8 +2,8 @@ package com.telran.pizzaservice.controller;
 
 import com.telran.pizzaservice.entity.Pizza;
 import com.telran.pizzaservice.entity.Pizzeria;
-import com.telran.pizzaservice.exception.PizzaNotFoundException;
-import com.telran.pizzaservice.exception.PizzeriaNotFoundException;
+import com.telran.pizzaservice.service.exception.PizzaNotFoundException;
+import com.telran.pizzaservice.service.exception.PizzeriaNotFoundException;
 import com.telran.pizzaservice.service.PizzaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

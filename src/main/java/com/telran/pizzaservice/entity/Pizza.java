@@ -47,13 +47,13 @@ public class Pizza {
     @Column(name = "image_url")
     private String imgUrl;
 
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            }, mappedBy = "pizzas")
-    @JsonIgnore
-    private Set<Pizzeria> pizzerias = new HashSet<>();
+//    @ManyToMany(fetch = FetchType.LAZY,
+//            cascade = {
+//                    CascadeType.PERSIST,
+//                    CascadeType.MERGE
+//            }, mappedBy = "pizzas")
+//    @JsonIgnore
+//    private Set<Pizzeria> pizzerias = new HashSet<>();
 
     @PostConstruct
     public void init() {
@@ -69,6 +69,6 @@ public class Pizza {
         this.price = price;
         this.basePrice = price;
         this.imgUrl = imgUrl;
-        this.pizzerias = pizzerias;
+//        this.pizzerias = pizzerias;
     }
 }

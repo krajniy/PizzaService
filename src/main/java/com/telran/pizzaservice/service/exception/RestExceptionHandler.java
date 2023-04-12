@@ -1,4 +1,4 @@
-package com.telran.pizzaservice.exception;
+package com.telran.pizzaservice.service.exception;
 
 import jakarta.validation.ConstraintViolationException;
 import org.jboss.logging.MDC;
@@ -80,6 +80,26 @@ public class RestExceptionHandler {
         problemDetail.setProperty("traceId", org.slf4j.MDC.get("traceId"));
         return new ResponseEntity<>(problemDetail, HttpStatus.UNPROCESSABLE_ENTITY);
     }
+
+
+    /**
+     * Handles UnprocessableEntityException and returns a ResponseEntity with a ProblemDetail object.
+     *
+     * @param e the UnprocessableEntityException to handle
+     * @return a ResponseEntity with a ProblemDetail object
+     */
+    @ExceptionHandler(UnprocessableEntityException.class)
+    protected ResponseEntity<ProblemDetail> handleUnprocessableEntityException(UnprocessableEntityException e) {
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        problemDetail.setTitle(e.getMessage());
+        problemDetail.setType(URI.create("https://api.documents.com/errors/unprocessable_entity"));
+        problemDetail.setProperty("timestamp", Instant.now());
+        problemDetail.setProperty("traceId", org.slf4j.MDC.get("traceId"));
+        return new ResponseEntity<>(problemDetail, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+
 
 
     /**

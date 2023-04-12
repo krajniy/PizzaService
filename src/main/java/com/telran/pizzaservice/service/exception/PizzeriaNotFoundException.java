@@ -1,4 +1,4 @@
-package com.telran.pizzaservice.exception;
+package com.telran.pizzaservice.service.exception;
 /**
  * This exception is thrown when a requested pizzeria is not found.
  *
