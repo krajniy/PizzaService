@@ -54,8 +54,7 @@ public class AdminControllerTests {
 
     @Test
     public void testCreatePizza() {
-        Pizza pizza = new Pizza(1L, "name", "description", 10.0, "url",
-                Set.of(new Pizzeria()));
+        Pizza pizza = new Pizza(1L, "name", "description", 10.0, "url");
         Mockito.when(pizzaService.createIfNotExists(pizza)).thenReturn(1L);
 
         ResponseEntity<Long> responseEntity = adminController.createPizza(pizza);
@@ -65,8 +64,7 @@ public class AdminControllerTests {
 
     @Test
     public void testGetPizza() {
-        Pizza pizza = new Pizza(1L, "name", "description", 10.0, "url",
-                Set.of(new Pizzeria()));
+        Pizza pizza = new Pizza(1L, "name", "description", 10.0, "url");
 
         Mockito.when(pizzaService.get(1L)).thenReturn(pizza);
 
@@ -78,8 +76,7 @@ public class AdminControllerTests {
 
     @Test
     public void testUpdatePizza() {
-        Pizza pizza = new Pizza(1L, "name", "description", 10.0, "url",
-                Set.of(new Pizzeria()));
+        Pizza pizza = new Pizza(1L, "name", "description", 10.0, "url");
         Mockito.doNothing().when(pizzaService).update(1L, pizza);
 
         ResponseEntity<Void> responseEntity = adminController.updatePizza(1L, pizza);
@@ -121,10 +118,8 @@ public class AdminControllerTests {
     @Test
     public void testGetAllPizzasInPizzeria() {
         Set<Pizza> pizzas = Set.of(
-                new Pizza(1L, "name", "description", 10.0, "url",
-                        Set.of(new Pizzeria())),
-                new Pizza(2L, "name1", "description1", 9.0, "url1",
-                        Set.of(new Pizzeria())));
+                new Pizza(1L, "name", "description", 10.0, "url"),
+                new Pizza(2L, "name1", "description1", 9.0, "url1"));
         Pizzeria pizzeria = new Pizzeria(1L, "Pizzeria1", "Address1", pizzas);
 
         Mockito.when(pizzeriaService.getPizzeriaById(1L)).thenReturn(pizzeria);
@@ -137,10 +132,8 @@ public class AdminControllerTests {
     @Test
     public void testAddPizzasToPizzeria() {
         Set<Pizza> pizzas = Set.of(
-                new Pizza(1L, "name", "description", 10.0, "url",
-                        Set.of(new Pizzeria())),
-                new Pizza(2L, "name1", "description1", 9.0, "url1",
-                        Set.of(new Pizzeria())));
+                new Pizza(1L, "name", "description", 10.0, "url"),
+                new Pizza(2L, "name1", "description1", 9.0, "url1"));
         Pizzeria pizzeria = new Pizzeria(1L, "Pizzeria1", "Address1", Set.of());
 
         Mockito.doNothing().when(pizzeriaService).addPizzas(1L, pizzas);

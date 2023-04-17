@@ -62,8 +62,8 @@ public class Pizza {
         }
     }
 
-    public Pizza(Long id, String name, String description, Double price, String imgUrl, Set<Pizzeria> pizzerias) {
-        this.id = id;
+    public Pizza(Long id, String name, String description, Double price, String imgUrl) {
+//        this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;

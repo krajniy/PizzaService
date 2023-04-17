@@ -36,11 +36,7 @@ public class PizzaServiceImpl implements PizzaService {
     @Override
     @Transactional(readOnly = true)
     public List<Pizza> getAllPizzas(Pageable pageable) {
-//        Page<Pizza> pizzas = pizzaRepository.findAll(pageable);
-//        if (pizzas.isEmpty()) {
-//            throw new PizzaNotFoundException("No pizzas found on this page");
-//        }
-//        return pizzas.getContent();
+
         return pizzaRepository.findAll(pageable).getContent();
     }
 

@@ -252,6 +252,29 @@ public class AdminController {
         return new ResponseEntity<>(null, HttpStatus.OK);
 
     }
+    /**
+     * Adds the provided set of pizzas to the existing set of pizzas in the specified pizzeria.
+     *
+     * @param pizzeria_id the ID of the pizzeria
+     * @param pizzaIds      the set of pizza ids to add as pizzas
+     * @return a ResponseEntity with no content and a status of OK if the operation was successful
+     * @throws PizzeriaNotFoundException    if the specified pizzeria does not exist
+     * @throws PizzaNotFoundException if set of pizza is unprocessable
+     */
+    @Operation(summary = "Adds the provided set of pizza ids as pizzas to the existing set of pizzas in the specified pizzeria.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Pizzas added to pizzeria"),
+            @ApiResponse(responseCode = "400", description = "Set of pizzas is unprocessable"),
+            @ApiResponse(responseCode = "404", description = "Pizzeria not found"),
+            @ApiResponse(responseCode = "404", description = "Pizza not found")
+    })
+    @PostMapping("/pizzerias/{pizzeria_id}/pizzaids")
+    public ResponseEntity<Void> addPizzasByIdToPizzeria(@PathVariable Long pizzeria_id, @RequestBody Set<Long> pizzaIds) {
+        pizzeriaService.addPizzasByIds(pizzeria_id, pizzaIds);
+        log.info("Pizzas added to Pizzeria");
+        return new ResponseEntity<>(null, HttpStatus.OK);
+
+    }
 
     /**
      * Removes the specified pizza from the specified pizzeria.

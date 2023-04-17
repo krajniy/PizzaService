@@ -35,10 +35,8 @@ public class AnonymousControllerTests {
     @Test
     public void testGetAllPizzas() {
         List<Pizza> pizzas = List.of(
-                new Pizza(1L, "Pepperoni", "description", 10.0, "url",
-                        Set.of(new Pizzeria())),
-                new Pizza(2L, "Margherita", "description", 10.0, "url",
-                        Set.of(new Pizzeria()))
+                new Pizza(1L, "Pepperoni", "description", 10.0, "url"),
+                new Pizza(2L, "Margherita", "description", 10.0, "url")
         );
         int page = 0;
         int size = 10;
@@ -71,8 +69,7 @@ public class AnonymousControllerTests {
     @Test
     public void testGetPizzaByName() {
         String pizzaName = "Pepperoni";
-        Pizza pizza = new Pizza(1L, "Pepperoni", "description", 10.0, "url",
-                Set.of(new Pizzeria()));
+        Pizza pizza = new Pizza(1L, "Pepperoni", "description", 10.0, "url");
         Mockito.when(pizzaService.findByName(pizzaName)).thenReturn(pizza);
 
         ResponseEntity<Pizza> responseEntity = anonymousController.getPizzaByName(pizzaName);
@@ -86,10 +83,8 @@ public class AnonymousControllerTests {
     public void testGetAllPizzasInPizzeria() {
         Long pizzeriaId = 1L;
         Set<Pizza> pizzas = Set.of(
-                new Pizza(1L, "name", "description", 10.0, "url",
-                        Set.of(new Pizzeria())),
-                new Pizza(2L, "name1", "description1", 9.0, "url1",
-                        Set.of(new Pizzeria())));
+                new Pizza(1L, "name", "description", 10.0, "url"),
+                new Pizza(2L, "name1", "description1", 9.0, "url1"));
 
         Mockito.when(adminController.getAllPizzasInPizzeria(pizzeriaId)).thenReturn(new ResponseEntity<>(pizzas, HttpStatus.OK));
 

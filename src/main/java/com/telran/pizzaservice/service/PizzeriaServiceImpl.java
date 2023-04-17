@@ -6,8 +6,8 @@ import com.telran.pizzaservice.service.exception.PizzaNotFoundException;
 import com.telran.pizzaservice.service.exception.PizzeriaNotFoundException;
 import com.telran.pizzaservice.repository.PizzaRepository;
 import com.telran.pizzaservice.repository.PizzeriaRepository;
+import com.telran.pizzaservice.service.exception.UnprocessableEntityException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,18 +42,12 @@ public class PizzeriaServiceImpl implements PizzeriaService {
      *
      * @param pageable the pagination information
      * @return a list of pizzerias
-     * @throws PizzeriaNotFoundException if there are no pizzerias on the given page
      */
     @Override
     @Transactional(readOnly = true)
     public List<Pizzeria> getAllPizzerias(Pageable pageable) {
 
-        Page<Pizzeria> pizzerias = pizzeriaRepository.findAll(pageable);
-
-        if (pizzerias.isEmpty()) {
-            throw new PizzeriaNotFoundException("No pizzerias on this page");
-        }
-        return pizzerias.getContent();
+        return pizzeriaRepository.findAll(pageable).getContent();
     }
 
 
@@ -122,11 +116,51 @@ public class PizzeriaServiceImpl implements PizzeriaService {
                     }
                 }
             });
+
             pizzeriaRepository.save(pizzeria);
         } else {
             throw new PizzeriaNotFoundException(pizzeriaId);
         }
     }
+
+
+    /**
+     * Adds the set of pizzas with the given ids to the pizzeria with the given id.
+     * Any pizzas in the set that do not already exist in the database will be saved.
+     *
+     * @param pizzeriaId the id of the pizzeria to add pizzas to
+     * @param pizzasIds     the set of ids of pizzas to add to the pizzeria
+     * @throws PizzeriaNotFoundException if no pizzeria with the given id exists in the database
+     * @trows PizzaNotFoundException  if no pizza with the given id exists in the database
+     */
+    @Override
+    @Transactional
+    public void addPizzasByIds(Long pizzeriaId, Set<Long> pizzasIds) {
+        Optional<Pizzeria> pizzeriaOptional = pizzeriaRepository.findById(pizzeriaId);
+        if (pizzeriaOptional.isPresent()) {
+            Pizzeria pizzeria = pizzeriaOptional.get();
+            Set<Pizza> existingPizzas = pizzeria.getPizzas();
+
+            pizzasIds.forEach(id -> {
+                Optional<Pizza> pizzaOptional = pizzaRepository.findById(id);
+
+                if (pizzaOptional.isPresent()) {
+                    Pizza existingPizza = pizzaOptional.get();
+                    if (!existingPizzas.contains(existingPizza)) {
+                        existingPizzas.add(existingPizza);
+                    }
+
+                } else {
+                    throw new PizzaNotFoundException();
+                }
+            } );
+
+            pizzeriaRepository.save(pizzeria);
+        } else {
+            throw new PizzeriaNotFoundException(pizzeriaId);
+        }
+    }
+
 
 
     /**

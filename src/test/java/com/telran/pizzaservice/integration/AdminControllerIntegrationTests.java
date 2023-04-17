@@ -2,6 +2,8 @@ package com.telran.pizzaservice.integration;
 
 import com.telran.pizzaservice.entity.Pizza;
 import com.telran.pizzaservice.entity.Pizzeria;
+import com.telran.pizzaservice.integration.fixtures.PizzaFixture;
+import com.telran.pizzaservice.integration.fixtures.PizzeriaFixture;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -88,12 +90,7 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
     @DisplayName("GET pizza by id")
     @Transactional(readOnly = true)
     void testGetPizzaById() throws Exception {
-        Pizza pizza = new Pizza();
-        pizza.setName("Vegan");
-        pizza.setPrice(10.0);
-        pizza.setImgUrl("url");
-        pizza.setDescription("This is test pizza");
-
+        Pizza pizza = PizzaFixture.getFixturePizza();
         Long pizzaId = pizzaService.createIfNotExists(pizza);
 
         mockMvc.perform(get("/admin/pizzas/{id}", pizzaId)
@@ -102,9 +99,9 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isNotEmpty())
-                .andExpect(jsonPath("$.name").value("Vegan"))
-                .andExpect(jsonPath("$.description").value("This is test pizza"))
-                .andExpect(jsonPath("$.imgUrl").value("url"))
+                .andExpect(jsonPath("$.name").value("test_pizza"))
+                .andExpect(jsonPath("$.description").value("test_description"))
+                .andExpect(jsonPath("$.imgUrl").value("test_url"))
                 .andExpect(jsonPath("$.price").value(10.0));
     }
 
@@ -113,10 +110,8 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
     @DisplayName("GET Pizzeria by id")
     @Transactional(readOnly = true)
     void testGetPizzeriaById() throws Exception {
-        Pizzeria pizzeria = new Pizzeria();
-        pizzeria.setName("TestPizzeria");
-        pizzeria.setAddress("TestPizzeriaAddress");
 
+        Pizzeria pizzeria = PizzeriaFixture.getFixturePizzeria();
         Long pizzeriaId = pizzeriaService.create(pizzeria);
 
         mockMvc.perform(get("/admin/pizzerias/{id}", pizzeriaId)
@@ -135,27 +130,11 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
     @Transactional(readOnly = true)
     void testGetAllPizzasInPizzeria() throws Exception {
 
-        Pizzeria pizzeria = new Pizzeria();
-        pizzeria.setName("TestPizzeriaWithPizzas");
-        pizzeria.setAddress("TestPizzeriaAddressWithPizzas");
-
-        Pizza pizza1 = new Pizza();
-        pizza1.setName("Vegan1");
-        pizza1.setPrice(10.0);
-        pizza1.setImgUrl("url");
-        pizza1.setDescription("This is test pizza");
-        pizzaService.createIfNotExists(pizza1);
-
-        Pizza pizza2 = new Pizza();
-        pizza2.setName("Vegan2");
-        pizza2.setPrice(10.0);
-        pizza2.setImgUrl("url");
-        pizza2.setDescription("This is test pizza");
-        pizzaService.createIfNotExists(pizza2);
-
-        pizzeria.setPizzas(Set.of(pizza1, pizza2));
+        Pizzeria pizzeria = PizzeriaFixture.getFixturePizzeria();
 
         pizzeriaService.create(pizzeria);
+        pizzeriaService.addPizzasByIds(pizzeria.getId(), Set.of(1L, 2L));
+
 
         mockMvc.perform(get("/admin/pizzerias/" + pizzeria.getId() + "/pizzas/")
                         .with(httpBasic("user", "password"))
@@ -164,7 +143,6 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$.length()").value(2));
-
     }
 
     @Test
@@ -188,11 +166,7 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
     @Transactional()
     @Rollback()
     void testUpdatePizzaWithValidData() throws Exception {
-        Pizza pizza = new Pizza();
-        pizza.setName("Vegan");
-        pizza.setPrice(10.0);
-        pizza.setImgUrl("url");
-        pizza.setDescription("This is test pizza");
+        Pizza pizza = PizzaFixture.getFixturePizza();
 
         Long pizzaId = pizzaService.createIfNotExists(pizza);
 
@@ -259,32 +233,17 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
     @Transactional()
     @Rollback()
     void testAddPizzasToPizzeria() throws Exception {
-        Pizzeria pizzeria = new Pizzeria();
-        pizzeria.setName("TestPizzeriaWithPizzas");
-        pizzeria.setAddress("TestPizzeriaAddressWithPizzas");
+        Pizzeria pizzeria = PizzeriaFixture.getFixturePizzeria();
 
-        Pizza pizza1 = new Pizza();
-        pizza1.setName("Vegan1");
-        pizza1.setPrice(10.0);
-        pizza1.setImgUrl("url");
-        pizza1.setDescription("This is test pizza");
-        pizzaService.createIfNotExists(pizza1);
-
-        Pizza pizza2 = new Pizza();
-        pizza2.setName("Vegan2");
-        pizza2.setPrice(10.0);
-        pizza2.setImgUrl("url");
-        pizza2.setDescription("This is test pizza");
-        pizzaService.createIfNotExists(pizza2);
-
-        Set<Pizza> pizzaSet = Set.of(pizza1, pizza2);
+        String jsonRequest = "[{\"name\": \"Vegan1\", \"description\": \"test pizza 1\", \"price\": \"10.0\"}," +
+                                "{\"name\": \"Vegan2\", \"description\": \"test pizza 2\", \"price\": \"10.0\"}]";
 
         pizzeriaService.create(pizzeria);
 
         mockMvc.perform(post("/admin/pizzerias/" + pizzeria.getId() + "/pizzas")
                         .with(httpBasic("user", "password"))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(pizzaSet)))
+                        .content(jsonRequest))
                 .andDo(print())
                 .andExpect(status().isOk());
 
@@ -295,30 +254,13 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
     @Transactional()
     @Rollback()
     void deletePizzaFrommPizzeria() throws Exception {
-        Pizzeria pizzeria = new Pizzeria();
-        pizzeria.setName("TestPizzeriaWithPizzas");
-        pizzeria.setAddress("TestPizzeriaAddressWithPizzas");
+        Pizzeria pizzeria = PizzeriaFixture.getFixturePizzeria() ;
 
-        Pizza pizza1 = new Pizza();
-        pizza1.setName("Vegan1");
-        pizza1.setPrice(10.0);
-        pizza1.setImgUrl("url");
-        pizza1.setDescription("This is test pizza");
-        pizzaService.createIfNotExists(pizza1);
-
-        Pizza pizza2 = new Pizza();
-        pizza2.setName("Vegan2");
-        pizza2.setPrice(10.0);
-        pizza2.setImgUrl("url");
-        pizza2.setDescription("This is test pizza");
-        pizzaService.createIfNotExists(pizza2);
-
-        Set<Pizza> pizzaSet = new HashSet<>();
-        pizzaSet.add(pizza1);
-        pizzaSet.add(pizza2);
-        pizzeria.setPizzas(pizzaSet);
+        Pizza pizza1 = pizzaService.get(1L);
+        Pizza pizza2 = pizzaService.get(2L);
 
         pizzeriaService.create(pizzeria);
+        pizzeriaService.addPizzasByIds(pizzeria.getId(), Set.of(pizza1.getId(), pizza2.getId()));
 
         mockMvc.perform(delete("/admin/pizzerias/" + pizzeria.getId() + "/pizzas/" + pizza1.getId())
                         .with(httpBasic("user", "password"))
