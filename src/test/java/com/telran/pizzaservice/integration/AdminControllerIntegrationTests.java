@@ -195,11 +195,8 @@ public class AdminControllerIntegrationTests extends IntegrationTestsInfrastruct
     @Transactional()
     @Rollback()
     void testDeletePizza() throws Exception {
-        Pizza pizza = new Pizza();
-        pizza.setName("Vegan");
-        pizza.setPrice(10.0);
-        pizza.setImgUrl("url");
-        pizza.setDescription("This is test pizza");
+
+        Pizza pizza = PizzaFixture.getFixturePizza();
 
         Long pizzaId = pizzaService.createIfNotExists(pizza);
 

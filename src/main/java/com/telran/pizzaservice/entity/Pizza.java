@@ -62,7 +62,8 @@ public class Pizza {
         }
     }
 
-    public Pizza(Long id, String name, String description, Double price, String imgUrl) {
+    //    public Pizza(Long id, String name, String description, Double price, String imgUrl) {
+    public Pizza(String name, String description, Double price, String imgUrl) {
 //        this.id = id;
         this.name = name;
         this.description = description;
