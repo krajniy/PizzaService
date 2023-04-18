@@ -59,7 +59,7 @@ and PizzeriaService components, which in turn depend on the PizzaRepository and 
 This layered architecture allows for separation of concerns and easier maintenance and testing of the application.
 
 ## Entity Relations Diagram
-![ER Diagram](https://github.com/krajniy/PizzaService/blob/master/img/ER%20Diagram.png)
+![ER Diagram](https://github.com/krajniy/PizzaService/blob/master/img/ER%20Diagram_new.png)
 ### Description
 The diagram shows three entities: **Pizza**, **Pizzeria**, and **Pizzeria_Pizza**. </br>
 The **Pizza** entity has attributes: id, name, description, price, and image_url. 
